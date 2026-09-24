@@ -31,6 +31,11 @@ button {
   cursor: pointer;
 }
 
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
 .app {
   width: min(1160px, calc(100% - 32px));
   margin: 0 auto;
@@ -39,6 +44,7 @@ button {
 
 .hero,
 .panel,
+.banner,
 .metrics article {
   background: #ffffff;
   border: 1px solid var(--border);
@@ -47,7 +53,7 @@ button {
 }
 
 .hero {
-  min-height: 250px;
+  min-height: 230px;
   display: grid;
   align-content: center;
   gap: 14px;
@@ -68,13 +74,13 @@ button {
 }
 
 .hero h1 {
-  font-size: clamp(34px, 6vw, 62px);
-  line-height: 1;
+  font-size: clamp(30px, 5vw, 54px);
+  line-height: 1.05;
   letter-spacing: 0;
 }
 
 .hero span {
-  max-width: 860px;
+  max-width: 900px;
   color: #526071;
   line-height: 1.75;
 }
@@ -108,8 +114,21 @@ button {
   margin-bottom: 18px;
 }
 
+.duo {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
 .panel {
   padding: 22px;
+  margin-bottom: 18px;
+}
+
+.workspace .panel,
+.duo .panel {
+  margin-bottom: 0;
 }
 
 .panel h2,
@@ -118,28 +137,27 @@ button {
   margin-top: 0;
 }
 
-.chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.chips button {
-  padding: 0 12px;
-  border-color: color-mix(in srgb, var(--primary) 24%, var(--border));
-  background: color-mix(in srgb, var(--primary) 8%, #ffffff);
-}
-
 .heading {
   display: flex;
   align-items: start;
   justify-content: space-between;
   gap: 16px;
-  margin-bottom: 18px;
+  margin-bottom: 14px;
 }
 
 .heading h2 {
   margin-bottom: 0;
+}
+
+.heading p {
+  margin-bottom: 4px;
+}
+
+.toolbar {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
 }
 
 .primary {
@@ -149,69 +167,437 @@ button {
   padding: 0 14px;
 }
 
-.field-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
-}
-
-label {
-  display: grid;
-  gap: 8px;
-}
-
-label span {
+.muted {
   color: #64748b;
-  font-size: 13px;
 }
 
-input {
-  width: 100%;
-  min-height: 42px;
-  border-radius: 7px;
-  border: 1px solid var(--border);
+.empty {
+  color: #64748b;
+  background: #f8fafc;
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  padding: 18px;
+  line-height: 1.7;
+}
+
+/* 阶段筛选 chips */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.chip {
   padding: 0 12px;
-}
-
-.records {
-  display: grid;
-  gap: 12px;
-}
-
-.records article {
-  display: grid;
-  grid-template-columns: 54px 1fr;
-  gap: 14px;
+  border-color: color-mix(in srgb, var(--primary) 24%, var(--border));
+  background: color-mix(in srgb, var(--primary) 8%, #ffffff);
+  display: inline-flex;
   align-items: center;
+  gap: 6px;
+}
+
+.chip em {
+  font-style: normal;
+  font-size: 12px;
+  color: #64748b;
+  background: #ffffff;
+  border-radius: 999px;
+  padding: 0 7px;
+  border: 1px solid var(--border);
+}
+
+.chip.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #ffffff;
+}
+
+.chip.active em {
+  color: var(--primary);
+}
+
+/* 判定规则说明 */
+.rules {
+  margin-top: 20px;
+  border-top: 1px dashed var(--border);
+  padding-top: 14px;
+}
+
+.rules h3 {
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.rules ul {
+  margin: 0;
+  padding-left: 18px;
+  color: #526071;
+  font-size: 13px;
+  line-height: 1.9;
+}
+
+/* 判定摘要行 */
+.judge-line {
+  margin: 0 0 12px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.judge-line.ok {
+  color: var(--primary);
+}
+
+/* 样本名册 */
+.roster {
+  display: grid;
+  gap: 10px;
+}
+
+.roster-row {
+  display: grid;
+  grid-template-columns: 34px 1fr auto;
+  gap: 12px;
+  align-items: start;
   padding: 14px;
   border: 1px solid var(--border);
   border-radius: 8px;
   background: #fbfdff;
 }
 
-.records b {
+.roster-row.checked {
+  border-color: color-mix(in srgb, var(--primary) 55%, var(--border));
+  background: color-mix(in srgb, var(--primary) 6%, #ffffff);
+}
+
+.roster-row.rejected {
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
+}
+
+.roster-row.focused {
+  box-shadow: inset 0 0 0 1px var(--secondary);
+}
+
+.pick {
   display: grid;
   place-items: center;
-  height: 44px;
-  border-radius: 8px;
-  color: #ffffff;
-  background: linear-gradient(135deg, var(--primary), var(--accent));
+  padding-top: 4px;
 }
 
-.records h3 {
-  margin-bottom: 6px;
+.pick input {
+  width: 18px;
+  height: 18px;
+  min-height: 0;
+  accent-color: var(--primary);
+  cursor: pointer;
 }
 
-.records p {
+.roster-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
+
+.roster-main p {
   margin: 0;
-  color: #526071;
+  font-size: 13px;
   line-height: 1.6;
 }
 
-@media (max-width: 860px) {
+.roster-side {
+  display: grid;
+  justify-items: end;
+  gap: 6px;
+}
+
+.link {
+  border: none;
+  background: none;
+  padding: 0;
+  min-height: 0;
+  color: var(--primary);
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.stage-chip {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--secondary);
+  background: color-mix(in srgb, var(--secondary) 12%, #ffffff);
+  border: 1px solid color-mix(in srgb, var(--secondary) 35%, var(--border));
+  border-radius: 999px;
+  padding: 2px 9px;
+}
+
+.badge {
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 3px 10px;
+  white-space: nowrap;
+}
+
+.badge.batch {
+  color: #ffffff;
+  background: var(--primary);
+}
+
+.badge.pending {
+  color: #64748b;
+  background: #eef2f7;
+  border: 1px dashed var(--border);
+}
+
+.badge.sealed {
+  color: #ffffff;
+  background: var(--accent);
+}
+
+.badge.open {
+  color: var(--primary);
+  background: color-mix(in srgb, var(--primary) 10%, #ffffff);
+  border: 1px solid color-mix(in srgb, var(--primary) 30%, var(--border));
+}
+
+.reasons {
+  margin: 8px 0 0;
+  padding-left: 18px;
+  color: var(--accent);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.ok-line {
+  margin: 8px 0 0;
+  color: var(--primary);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* 成批结果横幅 */
+.banner {
+  padding: 16px 20px;
+  margin-bottom: 18px;
+  border-left: 6px solid var(--primary);
+}
+
+.banner-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.banner-head strong {
+  color: var(--primary);
+}
+
+/* 温度曲线 */
+.chart-wrap svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.grid {
+  stroke: #e2e8f0;
+  stroke-width: 1;
+}
+
+.tick {
+  font-size: 11px;
+  fill: #64748b;
+}
+
+.temp-line {
+  fill: none;
+  stroke: #cbd5e1;
+  stroke-width: 2;
+  stroke-dasharray: 5 4;
+}
+
+.dot-ring {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2.5;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 10px;
+}
+
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #526071;
+}
+
+.legend-item i {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.legend-item i.ring-demo {
+  background: #ffffff;
+  border: 2.5px solid var(--accent);
+  width: 9px;
+  height: 9px;
+}
+
+/* 详情卡片 */
+.detail-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.detail-head h3 {
+  margin: 0;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0;
+}
+
+.detail-grid div {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  background: #fbfdff;
+}
+
+.detail-grid dt {
+  font-size: 12px;
+  color: #64748b;
+  margin-bottom: 4px;
+}
+
+.detail-grid dd {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* 联检批次 */
+.batch-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.batch-card {
+  border: 1px solid var(--border);
+  border-top: 4px solid var(--primary);
+  border-radius: 8px;
+  padding: 16px;
+  background: #fbfdff;
+}
+
+.batch-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.batch-card p {
+  margin: 0 0 6px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.member-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.member-chips .chip {
+  min-height: 30px;
+  font-size: 12px;
+}
+
+/* 案件关联页 */
+.case-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.case-card {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  background: #fbfdff;
+}
+
+.case-card.sealed {
+  background: color-mix(in srgb, var(--accent) 4%, #ffffff);
+}
+
+.case-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.case-head p {
+  margin: 4px 0 0;
+  font-size: 13px;
+}
+
+.case-samples {
+  list-style: none;
+  margin: 0 0 10px;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.case-samples li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  border-bottom: 1px dashed var(--border);
+  padding-bottom: 8px;
+}
+
+.case-batches {
+  margin: 0;
+  font-size: 13px;
+}
+
+@media (max-width: 960px) {
   .metrics,
   .workspace,
-  .field-grid {
+  .duo,
+  .batch-grid,
+  .case-grid,
+  .detail-grid {
     grid-template-columns: 1fr;
   }
 
